@@ -478,9 +478,12 @@ class NavigateEnv(BaseEnv):
         """
         self.current_step += 1
         self.robots[0].apply_action(action)
+        bp = self.get_position_of_interest()
         cache = self.before_simulation()
         collision_links = self.run_simulation()
         self.after_simulation(cache, collision_links)
+        ap = self.get_position_of_interest()
+        self.path_length += np.linalg.norm(ap-bp)
 
         state = self.get_state(collision_links)
         info = {}
@@ -516,6 +519,7 @@ class NavigateEnv(BaseEnv):
         """
 
         self.current_episode += 1
+        self.floor_num = 1
         self.reset_agent()
         state = self.get_state()
 
